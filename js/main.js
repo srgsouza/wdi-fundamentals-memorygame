@@ -1,4 +1,5 @@
-let cards = [
+//  Array of cards
+var cards = [
     {
         rank: 'queen',
         suit: 'hearts',
@@ -12,16 +13,19 @@ let cards = [
     {
         rank: 'king',
         suit: 'hearts',
-        cardImage: 'images/king-of-hearts'
+        cardImage: 'images/king-of-hearts.png'
     },
     {
         rank: 'king',
         suit: 'diamonds',
-        cardImage: 'images/king-of-diamonds'
+        cardImage: 'images/king-of-diamonds.png'
     }
 ];
-let cardsInPlay = [];
 
+// Array to track how many cards are in play
+var cardsInPlay = [];
+
+// Checks if the rank of the two (clicked) card matches 
 var checkForMatch = function () {
     if (cardsInPlay.length === 2) {
         if (cardsInPlay[0] === cardsInPlay[1]) {
@@ -32,16 +36,37 @@ var checkForMatch = function () {
     }
 }
 
-var flipCard = function (cardId) {
-    cardsInPlay.push(cards[cardId].rank);
+// Flips the card
+var flipCard = function () {
+    var cardId = this.getAttribute('data-id'); // Get the data-id attribute, set by the createBoard function
+    cardsInPlay.push(cards[cardId].rank); //  Add the clicked card to the 'cardsInPlay' array
+    this.setAttribute('src', cards[cardId].cardImage); // Set the new 'flippled' imaged for the card
     console.log(`User flipped ${cards[cardId].rank}`);
-    console.log(cards[cardId].cardImage);
-    console.log(cards[cardId].suit);
-    
+ 
     checkForMatch();
 }
 
-flipCard(0);
-flipCard(2);
+// Creates the board - Loads the initial cards / images to the HTML document
+var createBoard = function () {
+    for (var i = 0; i < cards.length; i += 1) {
+        var cardElement = document.createElement('img');
+        cardElement.setAttribute('src', 'images/back.png');
+        cardElement.setAttribute('data-id', i);
+        cardElement.addEventListener('click', flipCard);
+        document.getElementById('game-board').appendChild(cardElement);
 
+    }  
+}
+
+// Resets the board - Clears the array cardsInPlay and reset the card images
+var resetBoard = function () {
+    cardsInPlay = [];
+    for (var i = 0; i < cards.length; i += 1) {
+        newImage = document.getElementsByTagName('img')[i];
+        newImage.setAttribute('src', 'images/back.png');
+    }
+}
+document.getElementById('reset').addEventListener('click', resetBoard);
+
+createBoard();
 
